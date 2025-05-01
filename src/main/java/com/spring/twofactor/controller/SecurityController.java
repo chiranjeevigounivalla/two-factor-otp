@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.twofactor.service.EmailService;
 import com.spring.twofactor.service.OtpService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,9 @@ public class SecurityController {
 	
 	@Autowired
 	private OtpService otpService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	    @GetMapping("/login")
 	    public String login() {
@@ -30,6 +34,9 @@ public class SecurityController {
 	        String username = request.getUserPrincipal().getName();
 	        String otp = otpService.generateOtp(username);
 	        System.out.println("Generated OTP for " + username + ": " + otp);
+	        String email = username.equals("user") ? "rishikumar.Ilangovan@gmail.com" : null;
+	        emailService.sendOtp(email, otp);
+	 
 	        return "mfa";
 	    }
 
